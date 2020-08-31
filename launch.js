@@ -332,13 +332,15 @@ let ak = {
   },
 };
 
-if (funcs.findOnly(imgs_main.start_step_1, true)) {
+/* if (funcs.findOnly(imgs_main.start_step_1, true)) {
   ak.start(); // 手动进入具体关卡后运行
 } else if (funcs.findOnly(imgs_main.sign_lv, true)) {
   ak.ready().start(); // 在游戏主界面运行
 } else {
   ak.launch().login().dismiss().ready().start(); // 默认运行
-}
+} */
+
+runCount(getRewards(captureScreen()));
 
 /**
  * 工具函数
@@ -454,7 +456,7 @@ function runCount(imgs) {
   let name, count;
 
   if (!rewards["龙门币"]) rewards["龙门币"] = 0;
-  rewards["龙门币"] += parseInt(funcs.baiduOCR(imgs.shift()));
+  rewards["龙门币"] += +_getNum(funcs.baiduOCR(imgs.shift()));
 
   imgs.forEach((img, index) => {
     if (name = findMaterial(img)) {
