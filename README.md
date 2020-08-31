@@ -6,7 +6,7 @@
 # 脚本目录结构
 
 ```
- ├── /asset                        // 资源目录
+ ├── /asset                       // 资源目录
  │   ├── IMAGES_MAIN.js           // 脚本运行所需的图片，以二值化后的BASE64保存
  │   ├── IMAGES_MATERIAL.js       // 结算时材料统计所需图片，以二值化后的BASE64保存
  │   ├── OBJECTS_MATERIAL.js      // 需要的材料的相关信息
