@@ -157,7 +157,7 @@ let ak = {
       last_area = +extractNum(configs.last_areas[tg_mtrl.episode])[1];
     }
     
-    // 点击作战按钮，这个坐标需要做不同分辨率的适配
+    // 点击作战按钮
     funcs.findAndClick(imgs_main.sign_lv, true, {
       coord: rgn_vals.coord_battle
     });
