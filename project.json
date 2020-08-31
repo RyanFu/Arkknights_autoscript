@@ -1,0 +1,11 @@
+{
+    "name": "ArkKnights AutoScript",
+    "main": "launch.js",
+    "ignore": [
+        "build",
+        "doc"
+    ],
+    "packageName": "com.arkknights.autoscript",
+    "versionName": "2.0.0",
+    "versionCode": 2
+}
