@@ -236,7 +236,6 @@ let ak = {
 
       // 第一步，进入干员确认界面
       if (funcs.loopUntilFind(imgs_main.start_step_1, true)) {
-        toastLog("第" + ++current + "次运行");
         funcs.findAndClick(imgs_main.auto_deploy, true); // 代理指挥
         funcs.findAndClick(imgs_main.start_step_1, true);
       } else {
@@ -273,6 +272,7 @@ let ak = {
             }
           }
         })) {
+        toastLog("第" + ++current + "次运行");
         funcs.findAndClick(imgs_main.start_step_2, true);
       } else {
         exitGame("开始游戏失败，结束执行", true);

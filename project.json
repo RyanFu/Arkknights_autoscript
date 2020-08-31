@@ -2,8 +2,10 @@
     "name": "ArkKnights AutoScript",
     "main": "launch.js",
     "ignore": [
-        "build",
-        "doc"
+        ".git",
+        "doc",
+        "LICENSE",
+        "README.md"
     ],
     "packageName": "com.arkknights.autoscript",
     "versionName": "2.0.0",
