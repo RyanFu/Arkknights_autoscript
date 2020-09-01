@@ -118,6 +118,7 @@ let ak = {
         process: function (result) {
           let close = result.extras[0];
           if (close) atmt.click(close.x, close.y);
+          sleep(100);
         },
         interval: 1e3
       })) {
@@ -133,6 +134,7 @@ let ak = {
       process: function (result) {
         let close = result.extras[0];
         if (close) atmt.click(close.x, close.y);
+        sleep(100);
       },
       interval: 1e3
     })) {
@@ -254,10 +256,11 @@ let ak = {
                 (ets[1] && configs.using_originite_prime)) {
                 if (confirm) {
                   atmt.click(confirm.x, confirm.y);
+                  sleep(100);
                   toastLog("理智已补充");
                 }
                 funcs.findAndClick(imgs_main.start_step_1, true, {
-                  wait: 1e3
+                  wait: 500
                 });
               } else {
                 console.log(rewards);
@@ -265,7 +268,8 @@ let ak = {
                 exitGame("理智不足，结束执行");
               }
             }
-          }
+          },
+          interval: 1e3
         })) {
         toastLog("第" + ++current + "次运行");
         funcs.findAndClick(imgs_main.start_step_2, true);
