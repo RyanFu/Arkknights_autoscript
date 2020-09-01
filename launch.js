@@ -66,11 +66,6 @@ let rewards = {}; // 统计最终龙门币和材料数量
 let ak = {
   launch: function () {
     let is_running = false;
-    
-    if (!unlocker.is_init_screen_on) {
-      unlocker.unlock();
-      console.log("手机已解锁");
-    }
 
     toastLog("即将运行游戏");
     sleep(3e3);
@@ -332,12 +327,17 @@ let ak = {
   },
 };
 
+if (!device.isScreenOn()) {
+  unlocker.unlock();
+  console.log("手机已解锁");
+}
+
 if (funcs.findOnly(imgs_main.start_step_1, true)) {
-  ak.start(); // 手动进入具体关卡后运行
+  ak.start(); // 利用悬浮窗手动进入具体关卡后运行
 } else if (funcs.findOnly(imgs_main.sign_lv, true)) {
-  ak.ready().start(); // 在游戏主界面运行
+  ak.ready().start(); // 利用悬浮窗在游戏主界面运行
 } else {
-  ak.launch().login().dismiss().ready().start(); // 默认运行
+  ak.launch().login().dismiss().ready().start();
 }
 
 /**
@@ -456,17 +456,19 @@ function runCount(imgs) {
   if (!rewards["龙门币"]) rewards["龙门币"] = 0;
   rewards["龙门币"] += +_getNum(funcs.baiduOCR(imgs.shift()));
 
-  imgs.forEach((img, index) => {
-    if (name = findMaterial(img)) {
-      name = _trimNum(name);
-      count = ~name.indexOf("*") ? +_getNum(name) : 1;
-      if (!rewards[name]) rewards[name] = 0;
-      rewards[name] += count;
-    } else {
-      // 保存未识别到的材料图片，然后手动添加到 IMAGES_MATERIAL.js
-      //let tmp_path = files.join(files.getSdcardPath(), "Autojs/ArkKnights/tool/tmp/")
-      //let date = dateFormat("ddHHMM", new Date());
-      //images.save(img, tmp_path + '/' + date + '_' + index + ".png");
-    }
-  });
+  if (imgs.length) {
+    imgs.forEach((img, index) => {
+      if (name = findMaterial(img)) {
+        name = _trimNum(name);
+        count = ~name.indexOf("*") ? +_getNum(name) : 1;
+        if (!rewards[name]) rewards[name] = 0;
+        rewards[name] += count;
+      } else {
+        // 保存未识别到的材料图片，然后手动添加到 IMAGES_MATERIAL.js
+        //let tmp_path = files.join(files.getSdcardPath(), "Autojs/ArkKnights/tool/tmp/")
+        //let date = dateFormat("ddHHMM", new Date());
+        //images.save(img, tmp_path + '/' + date + '_' + index + ".png");
+      }
+    });
+  }
 }
