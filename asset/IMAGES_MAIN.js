@@ -1,4 +1,4 @@
-let {readImageBase64} = require("../lib/CommonFuncs");
+let { readImageBase64 } = require("../lib/CommonFuncs");
 
 var raw = {
   // 启动

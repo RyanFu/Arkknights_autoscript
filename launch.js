@@ -111,33 +111,37 @@ let ak = {
     if (checkFisrtRunningToday()) {
       console.log("今天第一次运行");
 
-      if (funcs.loopUntilFind(imgs_main.text_supply, true, {
+      if (
+        funcs.loopUntilFind(imgs_main.text_supply, true, {
+          options: {
+            extras: [imgs_main.sign_dismiss],
+          },
+          process: function (result) {
+            let close = result.extras[0];
+            if (close) atmt.click(close.x, close.y);
+            sleep(100);
+          },
+          interval: 1e3,
+        })
+      ) {
+        funcs.findAndClick(imgs_main.text_supply, true);
+      }
+    }
+
+    // 关闭公告/签到弹窗
+    if (
+      funcs.loopUntilFind(imgs_main.sign_lv, true, {
         options: {
-          extras: [imgs_main.sign_dismiss]
+          extras: [imgs_main.sign_dismiss],
         },
         process: function (result) {
           let close = result.extras[0];
           if (close) atmt.click(close.x, close.y);
           sleep(100);
         },
-        interval: 1e3
-      })) {
-        funcs.findAndClick(imgs_main.text_supply, true);
-      }
-    }
-
-    // 关闭公告/签到弹窗
-    if (funcs.loopUntilFind(imgs_main.sign_lv, true, {
-      options: {
-        extras: [imgs_main.sign_dismiss]
-      },
-      process: function (result) {
-        let close = result.extras[0];
-        if (close) atmt.click(close.x, close.y);
-        sleep(100);
-      },
-      interval: 1e3
-    })) {
+        interval: 1e3,
+      })
+    ) {
       toastLog("成功进入游戏主界面");
     } else {
       exitGame("进入游戏主界面失败，结束执行", true);
@@ -153,10 +157,10 @@ let ak = {
       current_area = +extractNum(tg_mtrl.area)[1];
       last_area = +extractNum(configs.last_areas[tg_mtrl.episode])[1];
     }
-    
+
     // 点击作战按钮
     funcs.findAndClick(imgs_main.sign_lv, true, {
-      coord: rgn_vals.coord_battle
+      coord: rgn_vals.coord_battle,
     });
 
     // 进入顶级区域
@@ -195,23 +199,27 @@ let ak = {
     }
 
     if (tg_mtrl.episode) {
-      if (extractNum(tg_mtrl.episode).length === 0 ?
-        funcs.swipeUntilFind(imgs_main[tg_mtrl.episode], true, rgn_vals.coords_episode):
-        funcs.swipeUntilFind(imgs_main[tg_mtrl.episode], true, rgn_vals.coords_episode_r)) {
+      if (
+        extractNum(tg_mtrl.episode).length === 0
+          ? funcs.swipeUntilFind(imgs_main[tg_mtrl.episode], true, rgn_vals.coords_episode)
+          : funcs.swipeUntilFind(imgs_main[tg_mtrl.episode], true, rgn_vals.coords_episode_r)
+      ) {
         funcs.findAndClick(imgs_main[tg_mtrl.episode], true, {
-          wait: 500
+          wait: 500,
         });
       } else {
         exitGame("进入游戏章节失败，结束执行", true);
       }
     }
-    
+
     if (tg_mtrl.area) {
-      if (current_area >= last_area ?
-        funcs.swipeUntilFind(imgs_main[tg_mtrl.area], true, rgn_vals.coords_area):
-        funcs.swipeUntilFind(imgs_main[tg_mtrl.area], true, rgn_vals.coords_area_r)) {
+      if (
+        current_area >= last_area
+          ? funcs.swipeUntilFind(imgs_main[tg_mtrl.area], true, rgn_vals.coords_area)
+          : funcs.swipeUntilFind(imgs_main[tg_mtrl.area], true, rgn_vals.coords_area_r)
+      ) {
         funcs.findAndClick(imgs_main[tg_mtrl.area], true, {
-          wait: 500
+          wait: 500,
         });
       } else {
         exitGame("进入游戏关卡失败，结束执行", true);
@@ -224,8 +232,7 @@ let ak = {
     let current = 0;
 
     while (configs.max_running_times--) {
-      if (tg_mtrl.count &&
-        rewards[configs.target_material] >= configs.target_quantity) {
+      if (tg_mtrl.count && rewards[configs.target_material] >= configs.target_quantity) {
         console.log(rewards);
         updateConfig();
         exitGame("任务完成，结束游戏");
@@ -240,28 +247,20 @@ let ak = {
       }
 
       // 第二步，正式开始游戏
-      if (funcs.loopUntilFind(imgs_main.start_step_2, true, {
+      if (
+        funcs.loopUntilFind(imgs_main.start_step_2, true, {
           options: {
-            extras: [
-              imgs_main.text_potion,
-              imgs_main.text_prime,
-              imgs_main.sign_confirm
-            ]
+            extras: [imgs_main.text_potion, imgs_main.text_prime],
           },
           process: function (result) {
             let ets = result.extras; // et = extra targets
-            let confirm = ets[2];
             if (ets[0] || ets[1]) {
-              if ((ets[0] && configs.using_sanity_potion) ||
-                (ets[1] && configs.using_originite_prime)) {
-                if (confirm) {
-                  atmt.click(confirm.x, confirm.y);
-                  sleep(100);
-                  toastLog("理智已补充");
-                }
-                funcs.findAndClick(imgs_main.start_step_1, true, {
-                  wait: 500
-                });
+              if (
+                (ets[0] && configs.using_sanity_potion) ||
+                (ets[1] && configs.using_originite_prime)
+              ) {
+                funcs.findAndClick(imgs_main.sign_confirm, true) && toastLog("理智已补充");
+                funcs.findAndClick(imgs_main.start_step_1, true);
               } else {
                 console.log(rewards);
                 updateConfig();
@@ -269,8 +268,9 @@ let ak = {
               }
             }
           },
-          interval: 1e3
-        })) {
+          interval: 1e3,
+        })
+      ) {
         toastLog("第" + ++current + "次运行");
         funcs.findAndClick(imgs_main.start_step_2, true);
       } else {
@@ -279,39 +279,43 @@ let ak = {
 
       // 第三步，结算（剿灭模式的结算界面与普通关卡不同）
       if (configs.target_material === "合成玉") {
-        if (funcs.loopUntilFind(imgs_main.sign_defeat, true, {
-            bound: 1800e3,
-            interval: 3e3,
+        if (
+          funcs.loopUntilFind(imgs_main.sign_defeat, true, {
             options: {
-              extras: [imgs_main.text_levelup]
+              extras: [imgs_main.text_levelup],
             },
             process: function (target) {
               let tmp = target.extras[0];
               if (tmp) atmt.click(tmp.x, tmp.y);
-            }
-          })) {
+            },
+            bound: 1800e3,
+            interval: 3e3,
+          })
+        ) {
           funcs.findAndClick(imgs_main.sign_defeat, true);
         } else {
           exitGame("游戏结算失败，结束执行", true);
         }
 
         if (funcs.loopUntilFind(imgs_main.text_reward, true)) {
-          funcs.findAndClick(imgs_main.text_reward, true)
+          funcs.findAndClick(imgs_main.text_reward, true);
         } else {
           exitGame("游戏结算失败，结束执行", true);
         }
       } else {
-        if (funcs.loopUntilFind(imgs_main.text_reliance, true, {
-            bound: 300e3,
-            interval: 3e3,
+        if (
+          funcs.loopUntilFind(imgs_main.text_reliance, true, {
             options: {
-              extras: [imgs_main.text_levelup]
+              extras: [imgs_main.text_levelup],
             },
             process: function (target) {
               let tmp = target.extras[0];
               if (tmp) atmt.click(tmp.x, tmp.y);
-            }
-          })) {
+            },
+            bound: 300e3,
+            interval: 3e3,
+          })
+        ) {
           if (tg_mtrl.count) {
             sleep(3e3); // 等待结算动画结束
             runCount(getRewards(captureScreen()));
@@ -336,6 +340,8 @@ if (!device.isScreenOn()) {
   console.log("手机已解锁");
 }
 
+sleep(1e3); // 通过悬浮窗运行需要一点缓冲时间
+
 if (funcs.findOnly(imgs_main.start_step_1, true)) {
   ak.start(); // 利用悬浮窗手动进入具体关卡后运行
 } else if (funcs.findOnly(imgs_main.sign_lv, true)) {
@@ -349,13 +355,13 @@ if (funcs.findOnly(imgs_main.start_step_1, true)) {
  */
 // 提取字符串中的数字
 function extractNum(str) {
-  return str.split("_").filter(word => word.match(/\d+/));
+  return str.split("_").filter((word) => word.match(/\d+/));
 }
 
 // 格式化日期字符串
 function dateFormat(fmt, date) {
   let reg;
-  let padStr = str => str.length === 1 ? "0" + str : str;
+  let padStr = (str) => (str.length === 1 ? "0" + str : str);
 
   const opt = {
     "Y+": date.getFullYear().toString(), // 年
@@ -363,14 +369,14 @@ function dateFormat(fmt, date) {
     "d+": date.getDate().toString(), // 日
     "H+": date.getHours().toString(), // 时
     "M+": date.getMinutes().toString(), // 分
-    "S+": date.getSeconds().toString() // 秒
+    "S+": date.getSeconds().toString(), // 秒
   };
   for (let k in opt) {
     reg = new RegExp("(" + k + ")").exec(fmt);
     if (reg) {
-      fmt = fmt.replace(reg[0], (reg[0].length === 1) ? opt[k] : padStr(opt[k]));
-    };
-  };
+      fmt = fmt.replace(reg[0], reg[0].length === 1 ? opt[k] : padStr(opt[k]));
+    }
+  }
   return fmt;
 }
 
@@ -380,7 +386,7 @@ function checkFisrtRunningToday() {
   let lrt = new Date(configs.last_running_time);
   let base_time = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 4); // 当天4点
 
-  if (now - base_time > 0 && (now - lrt) > (now - base_time)) {
+  if (now - base_time > 0 && now - lrt > now - base_time) {
     return true;
   } else {
     return false;
@@ -431,7 +437,7 @@ function getRewards(img) {
     let radius = circle.radius;
     let x = rgn_vals.region_rewards[0] + circle.x - radius;
     let y = rgn_vals.region_rewards[1] + circle.y - radius;
-    results[i-1] = images.clip(img_gray, x, y, 2 * radius, 2 * radius);
+    results[i - 1] = images.clip(img_gray, x, y, 2 * radius, 2 * radius);
   });
 
   return results;
@@ -439,12 +445,13 @@ function getRewards(img) {
 
 // 在材料库中查找给定材料
 function findMaterial(img) {
-  let _getBinary = img => images.threshold(images.grayscale(img), 100, 255);
+  let _getBinary = (img) => images.threshold(images.grayscale(img), 100, 255);
   for (let name in imgs_mtrl) {
-    if (images.findImage(
-      _getBinary(imgs_mtrl[name]), 
-      _getBinary(img), 
-      {threshold: 0.88})) {
+    if (
+      images.findImage(_getBinary(imgs_mtrl[name]), _getBinary(img), {
+        threshold: 0.88,
+      })
+    ) {
       return name;
     }
   }
@@ -453,8 +460,8 @@ function findMaterial(img) {
 
 // 统计龙门币和材料
 function runCount(imgs) {
-  let _trimNum = string => string.replace(/\*\d+/g, "");
-  let _getNum = string => string.replace(/[^(\d+)]/g, "");
+  let _trimNum = (string) => string.replace(/\*\d+/g, "");
+  let _getNum = (string) => string.replace(/[^(\d+)]/g, "");
   let name, count;
 
   if (!rewards["龙门币"]) rewards["龙门币"] = 0;
@@ -462,7 +469,7 @@ function runCount(imgs) {
 
   if (imgs.length) {
     imgs.forEach((img, index) => {
-      if (name = findMaterial(img)) {
+      if ((name = findMaterial(img))) {
         name = _trimNum(name);
         count = ~name.indexOf("*") ? +_getNum(name) : 1;
         if (!rewards[name]) rewards[name] = 0;

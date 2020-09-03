@@ -25,7 +25,7 @@ let DEFAULT_CONFIG = {
     episode_6: "area_6_1",
     episode_7: "area_7_1",
   },
-}
+};
 
 // 创建本地存储
 var config = storages.create("arkknights_configs");
@@ -38,6 +38,7 @@ if (!config.get("initialized")) {
 }
 
 // 无UI界面，暂时手动配置
+config.put("base_ratio", "16:9");
 config.put("max_running_times", 999);
 config.put("using_sanity_potion", true);
 config.put("target_material", "event_RMA7012");

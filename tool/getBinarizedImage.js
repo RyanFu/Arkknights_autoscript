@@ -11,12 +11,10 @@ if (imgs.length === 0) {
   exit();
 }
 
-ui.layout(
-  '<scroll>\
+ui.layout('<scroll>\
     <vertical id="main" w="*" padding="0 40px">\
     </vertical>\
-  </scroll>'
-);
+  </scroll>');
 
 function _readImage(path, binary) {
   if (binary) {
@@ -30,12 +28,18 @@ imgs.forEach(function (img, index) {
   let img_tmp = _readImage(files.join(_imgs_path, img), true);
 
   result[img_name] = images.toBase64(img_tmp);
-  ui.main.addView(ui.inflate(
-    '<vertical>' +
-      '<img marginTop="30px" marginBottom="10px" w="400px" h="400px" id="' + img_name + '" layout_gravity="center" />' +
-      '<text text="' + img_name + '" gravity="center" />' +
-    '</vertical>'
-  ));
+  ui.main.addView(
+    ui.inflate(
+      "<vertical>" +
+        '<img marginTop="30px" marginBottom="10px" w="400px" h="400px" id="' +
+        img_name +
+        '" layout_gravity="center" />' +
+        '<text text="' +
+        img_name +
+        '" gravity="center" />' +
+        "</vertical>"
+    )
+  );
   ui[img_name].setImageBitmap(img_tmp.bitmap);
 });
 
