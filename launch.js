@@ -37,6 +37,7 @@ let config = storages.create("arkknights_configs");
 
 let configs = {
   base_ratio: undefined,
+  threshold_material: undefined,
   max_running_times: undefined,
   last_running_time: undefined,
   using_sanity_potion: undefined,
@@ -449,7 +450,7 @@ function findMaterial(img) {
   for (let name in imgs_mtrl) {
     if (
       images.findImage(_getBinary(imgs_mtrl[name]), _getBinary(img), {
-        threshold: 0.88,
+        threshold: configs.threshold_material,
       })
     ) {
       return name;

@@ -3,6 +3,10 @@ let DEFAULT_CONFIG = {
   initialized: true,
   // 分辨率比率
   base_ratio: "16:9",
+  // 全局找图精度
+  threshold_all: 0.85,
+  // 材料统计的找图精度
+  threshold_material: 0.88,
   // 最大运行次数，超出次数直接结束
   max_running_times: 999,
   // 脚本上次运行的时间，用来判断是否当天首次运行
@@ -28,7 +32,7 @@ let DEFAULT_CONFIG = {
 };
 
 // 创建本地存储
-var config = storages.create("arkknights_configs");
+let config = storages.create("arkknights_configs");
 
 // 第一次运行初始化配置
 if (!config.get("initialized")) {
@@ -39,6 +43,8 @@ if (!config.get("initialized")) {
 
 // 无UI界面，暂时手动配置
 config.put("base_ratio", "16:9");
+config.put("threshold_all", 0.85);
+config.put("threshold_material", 0.88);
 config.put("max_running_times", 999);
 config.put("using_sanity_potion", true);
 config.put("target_material", "event_RMA7012");
